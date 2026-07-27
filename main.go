@@ -28,7 +28,7 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		AppName:      cfg.App.Name,
-		BodyLimit:    cfg.Server.BodyLimit,
+		BodyLimit:    cfg.Server.BodyLimitMB * 1024 * 1024,
 		ErrorHandler: httptransport.NewErrorHandler(logger),
 	})
 

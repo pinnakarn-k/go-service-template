@@ -3,7 +3,7 @@ app:
 
 server:
   port: 8080
-  body_limit: 4194304
+  body_limit_mb: 10
 
 cors:
   allow_origins: "*"

@@ -23,8 +23,8 @@ type AppConfig struct {
 }
 
 type ServerConfig struct {
-	Port      int `mapstructure:"port"`
-	BodyLimit int `mapstructure:"body_limit"`
+	Port        int `mapstructure:"port"`
+	BodyLimitMB int `mapstructure:"body_limit_mb"`
 }
 
 type CORSConfig struct {
