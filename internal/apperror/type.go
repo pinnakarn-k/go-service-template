@@ -1,38 +1,25 @@
 package apperror
 
-import "net/http"
-
-var (
-	ErrUnauthorized = &Error{
-		Status:  http.StatusUnauthorized,
-		Code:    "UNAUTHORIZED",
-		Message: "unauthorized",
-	}
-
-	ErrForbidden = &Error{
-		Status:  http.StatusForbidden,
-		Code:    "FORBIDDEN",
-		Message: "forbidden",
-	}
-
-	ErrNotFound = &Error{
-		Status:  http.StatusNotFound,
-		Code:    "NOT_FOUND",
-		Message: "resource not found",
-	}
-
-	ErrInternal = &Error{
-		Status:  http.StatusInternalServerError,
-		Code:    "INTERNAL_ERROR",
-		Message: "internal server error",
-	}
+import (
+	"fmt"
 )
 
-func NewInvalidQueryError(cause error) *Error {
-	return &Error{
-		Status:  http.StatusBadRequest,
-		Code:    "INVALID_QUERY",
-		Message: "invalid query parameters",
-		Cause:   cause,
+type Error struct {
+	Status  int
+	Code    string
+	Message string
+	Details []Detail
+	Cause   error
+}
+
+func (e *Error) Error() string {
+	if e.Cause != nil {
+		return fmt.Sprintf("%s: %v", e.Code, e.Cause)
 	}
+
+	return e.Code
+}
+
+func (e *Error) Unwrap() error {
+	return e.Cause
 }
