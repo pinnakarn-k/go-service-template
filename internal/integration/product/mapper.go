@@ -1,81 +1,23 @@
-package dummyjson
+package product
 
 import (
 	"fmt"
 	"math"
 	"strings"
 
-	"github.com/shopspring/decimal"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
 
-// carts
-func mapGetCartsResponse(
-	src *GetCartsClientResponse,
-) *GetCartsResponse {
-	items := make([]CartResponse, 0, len(src.Carts))
-
-	for _, cart := range src.Carts {
-		products := make(
-			[]CartProductResponse,
-			0,
-			len(cart.Products),
-		)
-
-		for _, product := range cart.Products {
-			products = append(products, CartProductResponse{
-				ProductID: product.ID,
-				Name:      strings.ToUpper(product.Title),
-				UnitPrice: formatAmount(product.Price),
-				Quantity:  product.Quantity,
-				NetAmount: formatAmount(product.DiscountedTotal),
-			})
-		}
-
-		items = append(items, CartResponse{
-			CartID:        cart.ID,
-			UserCode:      fmt.Sprintf("USER-%05d", cart.UserID),
-			TotalAmount:   formatAmount(cart.Total),
-			NetAmount:     formatAmount(cart.DiscountedTotal),
-			TotalProducts: cart.TotalProducts,
-			TotalQuantity: cart.TotalQuantity,
-			Summary: fmt.Sprintf(
-				"%d products, %d items",
-				cart.TotalProducts,
-				cart.TotalQuantity,
-			),
-			Products: products,
-		})
-	}
-
-	page := 1
-	if src.Limit > 0 {
-		page = (src.Skip / src.Limit) + 1
-	}
-
-	return &GetCartsResponse{
-		Items:      items,
-		TotalItems: src.Total,
-		Page:       page,
-		PageSize:   src.Limit,
-	}
-}
-
-func formatAmount(amount decimal.Decimal) string {
-	return amount.StringFixed(2)
-}
-
-// products
 func mapGetProductsResponse(
-	src *GetProductsClientResponse,
+	src *ClientGetProductsResponse,
 ) *GetProductsResponse {
 	if src == nil {
 		return nil
 	}
 
 	items := make(
-		[]ProductResponse,
+		[]Product,
 		0,
 		len(src.Products),
 	)
@@ -83,7 +25,7 @@ func mapGetProductsResponse(
 	for _, product := range src.Products {
 		items = append(
 			items,
-			ProductResponse{
+			Product{
 				ProductID:    product.ID,
 				Name:         product.Title,
 				CategoryName: mapCategoryName(product.Category),
@@ -98,7 +40,7 @@ func mapGetProductsResponse(
 				Brand:        product.Brand,
 				ThumbnailURL: product.Thumbnail,
 				Tags:         product.Tags,
-				Dimensions: DimensionResponse{
+				Dimensions: Dimension{
 					Width:  product.Dimensions.Width,
 					Height: product.Dimensions.Height,
 					Depth:  product.Dimensions.Depth,
@@ -160,7 +102,7 @@ func mapCategoryName(category string) string {
 }
 
 func calculateVolume(
-	dimensions ProductDimensionsClientResponse,
+	dimensions ClientDimension,
 ) float64 {
 	return dimensions.Width *
 		dimensions.Height *
@@ -168,10 +110,10 @@ func calculateVolume(
 }
 
 func mapReviewSummary(
-	reviews []ProductReviewClientResponse,
-) ReviewSummaryResponse {
+	reviews []ClientReview,
+) ReviewSummary {
 	if len(reviews) == 0 {
-		return ReviewSummaryResponse{}
+		return ReviewSummary{}
 	}
 
 	var totalRating int
@@ -187,7 +129,7 @@ func mapReviewSummary(
 
 	averageRating := float64(totalRating) / float64(len(reviews))
 
-	return ReviewSummaryResponse{
+	return ReviewSummary{
 		TotalReviews:   len(reviews),
 		AverageRating:  roundToTwoDecimals(averageRating),
 		LatestReviewer: latestReview.ReviewerName,

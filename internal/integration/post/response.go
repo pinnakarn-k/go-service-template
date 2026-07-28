@@ -1,4 +1,4 @@
-package jsonplaceholder
+package post
 
 type PostResponse struct {
 	UserID int    `json:"userId"`

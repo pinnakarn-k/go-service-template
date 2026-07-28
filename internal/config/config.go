@@ -9,13 +9,12 @@ import (
 )
 
 type Config struct {
-	App             AppConfig             `mapstructure:"app"`
-	Server          ServerConfig          `mapstructure:"server"`
-	CORS            CORSConfig            `mapstructure:"cors"`
-	HTTPClient      HTTPClientConfig      `mapstructure:"http_client"`
-	Auth            AuthConfig            `mapstructure:"auth"`
-	DummyJSON       DummyJSONConfig       `mapstructure:"dummyjson"`
-	JSONPlaceholder JSONPlaceholderConfig `mapstructure:"jsonplaceholder"`
+	App         AppConfig         `mapstructure:"app"`
+	Server      ServerConfig      `mapstructure:"server"`
+	CORS        CORSConfig        `mapstructure:"cors"`
+	HTTPClient  HTTPClientConfig  `mapstructure:"http_client"`
+	Auth        AuthConfig        `mapstructure:"auth"`
+	Integration IntegrationConfig `mapstructure:"integration"`
 }
 
 type AppConfig struct {
@@ -42,12 +41,18 @@ type AuthConfig struct {
 	JWTSecret  string `mapstructure:"jwt_secret"`
 }
 
-type DummyJSONConfig struct {
-	BaseURL string `mapstructure:"base_url"`
+type IntegrationConfig struct {
+	GetProducts IntegrationConfigItem `mapstructure:"get_products"`
+	GetCarts    IntegrationConfigItem `mapstructure:"get_carts"`
+	GetPosts    IntegrationConfigItem `mapstructure:"get_posts"`
+	GetPostByID IntegrationConfigItem `mapstructure:"get_post_by_id"`
 }
 
-type JSONPlaceholderConfig struct {
-	BaseURL string `mapstructure:"base_url"`
+type IntegrationConfigItem struct {
+	URL         string `mapstructure:"url"`
+	Application string `mapstructure:"application"`
+	Requester   string `mapstructure:"requester"`
+	Key         string `mapstructure:"key"`
 }
 
 func Load() (*Config, error) {

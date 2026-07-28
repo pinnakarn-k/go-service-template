@@ -1,8 +1,8 @@
-package dummyjson
+package cart
 
 import "github.com/shopspring/decimal"
 
-type GetCartsClientResponse struct {
+type ClientGetCartsResponse struct {
 	Carts []ClientCart `json:"carts"`
 	Total int          `json:"total"`
 	Skip  int          `json:"skip"`

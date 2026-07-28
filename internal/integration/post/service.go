@@ -1,4 +1,4 @@
-package jsonplaceholder
+package post
 
 import (
 	"context"

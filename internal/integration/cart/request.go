@@ -1,4 +1,4 @@
-package dummyjson
+package cart
 
 type GetCartsRequest struct {
 	Limit  int `query:"limit" validate:"required,min=1,max=100"`

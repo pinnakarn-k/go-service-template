@@ -1,7 +1,7 @@
-package jsonplaceholder
+package post
 
 func mapPostsResponse(
-	src []PostClientResponse,
+	src []ClientPostResponse,
 ) []PostResponse {
 	items := make([]PostResponse, 0, len(src))
 
@@ -19,7 +19,7 @@ func mapPostsResponse(
 }
 
 func mapPostResponse(
-	src *PostClientResponse,
+	src *ClientPostResponse,
 ) *PostResponse {
 	return &PostResponse{
 		UserID: src.UserID,

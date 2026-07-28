@@ -1,7 +1,6 @@
-package dummyjson
+package product
 
 import (
-	"go-service-template/internal/apperror"
 	"go-service-template/internal/response"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,28 +21,6 @@ func NewHandler(
 		service:   service,
 		validator: validator,
 	}
-}
-
-func (h *Handler) GetCarts(c *fiber.Ctx) error {
-	var req GetCartsRequest
-
-	if err := c.QueryParser(&req); err != nil {
-		return apperror.NewInvalidQueryError(err)
-	}
-
-	if err := h.validator.Validate(req); err != nil {
-		return err
-	}
-
-	carts, err := h.service.GetCarts(
-		c.UserContext(),
-		req,
-	)
-	if err != nil {
-		return err
-	}
-
-	return response.OK(c, carts)
 }
 
 func (h *Handler) GetProducts(c *fiber.Ctx) error {

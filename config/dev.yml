@@ -17,8 +17,27 @@ auth:
   cookie_name: x-my-service
   jwt_secret: local-dev-secret-123456
 
-dummyjson:
-  base_url: https://dummyjson.com
+integration:
+  get_products:
+    url: https://dummyjson.com/products
+    application: product-app
+    requester: product-requester
+    key: product-key
 
-jsonplaceholder:
-  base_url: https://jsonplaceholder.typicode.com
+  get_carts:
+    url: https://dummyjson.com/carts
+    application: cart-app
+    requester: cart-requester
+    key: cart-key
+
+  get_posts:
+    url: https://jsonplaceholder.typicode.com/posts
+    application: post-app
+    requester: post-requester
+    key: post-key
+
+  get_post_by_id:
+    url: https://jsonplaceholder.typicode.com/posts/%d
+    application: post-by-id-app
+    requester: post-by-id-requester
+    key: post-by-id-key

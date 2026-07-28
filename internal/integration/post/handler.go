@@ -1,4 +1,4 @@
-package jsonplaceholder
+package post
 
 import (
 	"go-service-template/internal/response"

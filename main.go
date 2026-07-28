@@ -11,8 +11,9 @@ import (
 	"go-service-template/internal/auth"
 	"go-service-template/internal/config"
 	"go-service-template/internal/httptransport"
-	"go-service-template/internal/integration/dummyjson"
-	"go-service-template/internal/integration/jsonplaceholder"
+	"go-service-template/internal/integration/cart"
+	"go-service-template/internal/integration/post"
+	"go-service-template/internal/integration/product"
 	"go-service-template/internal/logger"
 	"go-service-template/internal/middleware"
 	"go-service-template/internal/validator"
@@ -54,37 +55,38 @@ func main() {
 		Timeout: cfg.HTTPClient.Timeout,
 	}
 
-	// dummyJSON
-	dummyJSONClient := dummyjson.NewClient(
-		cfg.DummyJSON.BaseURL,
-		httpClient,
-	)
-
-	dummyJSONService := dummyjson.NewService(dummyJSONClient)
-	dummyJSONHandler := dummyjson.NewHandler(dummyJSONService, requestValidator)
-	api.Get("/carts", dummyJSONHandler.GetCarts)
-	api.Get("/products", dummyJSONHandler.GetProducts)
-
+	// health
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.SendString("OK")
 	})
 
-	// jsonPlaceholder
-	jsonPlaceholderClient := jsonplaceholder.NewClient(
-		cfg.JSONPlaceholder.BaseURL,
+	// cart
+	cartClient := cart.NewClient(
+		cfg,
 		httpClient,
 	)
+	cartService := cart.NewService(cartClient)
+	cartHandler := cart.NewHandler(cartService, requestValidator)
+	api.Get("/carts", cartHandler.GetCarts)
 
-	jsonPlaceholderService := jsonplaceholder.NewService(
-		jsonPlaceholderClient,
+	// product
+	productClient := product.NewClient(
+		cfg,
+		httpClient,
 	)
+	productService := product.NewService(productClient)
+	productHandler := product.NewHandler(productService, requestValidator)
+	api.Get("/products", productHandler.GetProducts)
 
-	jsonPlaceholderHandler := jsonplaceholder.NewHandler(
-		jsonPlaceholderService,
+	// post
+	postClient := post.NewClient(
+		cfg,
+		httpClient,
 	)
-
-	api.Get("/posts", jsonPlaceholderHandler.GetPosts)
-	api.Get("/posts/:id", jsonPlaceholderHandler.GetPostByID)
+	postService := post.NewService(postClient)
+	postHandler := post.NewHandler(postService)
+	api.Get("/posts", postHandler.GetPosts)
+	api.Get("/posts/:id", postHandler.GetPostByID)
 
 	address := fmt.Sprintf(":%d", cfg.Server.Port)
 

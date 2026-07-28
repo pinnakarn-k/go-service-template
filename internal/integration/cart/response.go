@@ -1,6 +1,5 @@
-package dummyjson
+package cart
 
-// cart
 type GetCartsResponse struct {
 	Items      []CartResponse `json:"items"`
 	TotalItems int            `json:"totalItems"`
