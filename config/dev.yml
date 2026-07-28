@@ -14,7 +14,7 @@ http_client:
   timeout: 30s
 
 auth:
-  cookie_name: x-my-service
+  cookie_name: x-my-service-token
   jwt_secret: local-dev-secret-123456
 
 integration:
@@ -22,22 +22,26 @@ integration:
     url: https://dummyjson.com/products
     application: product-app
     requester: product-requester
-    key: product-key
+    key: 0123456789ABCDEF
+    base64_mode: standard
 
   get_carts:
     url: https://dummyjson.com/carts
     application: cart-app
     requester: cart-requester
-    key: cart-key
+    key: 0123456789ABCDEF
+    base64_mode: url
 
   get_posts:
     url: https://jsonplaceholder.typicode.com/posts
     application: post-app
     requester: post-requester
-    key: post-key
+    key: 0123456789ABCDEF
+    base64_mode: raw_url
 
   get_post_by_id:
     url: https://jsonplaceholder.typicode.com/posts/%d
     application: post-by-id-app
     requester: post-by-id-requester
-    key: post-by-id-key
+    key: 0123456789ABCDEF
+    base64_mode: raw_url

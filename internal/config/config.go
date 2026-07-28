@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"go-service-template/internal/httpclient"
 	"os"
 	"time"
 
@@ -49,10 +50,11 @@ type IntegrationConfig struct {
 }
 
 type IntegrationConfigItem struct {
-	URL         string `mapstructure:"url"`
-	Application string `mapstructure:"application"`
-	Requester   string `mapstructure:"requester"`
-	Key         string `mapstructure:"key"`
+	URL         string                `mapstructure:"url"`
+	Application string                `mapstructure:"application"`
+	Requester   string                `mapstructure:"requester"`
+	Key         string                `mapstructure:"key"`
+	Base64Mode  httpclient.Base64Mode `mapstructure:"base64_mode"`
 }
 
 func Load() (*Config, error) {

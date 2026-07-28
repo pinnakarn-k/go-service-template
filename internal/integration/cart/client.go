@@ -26,6 +26,8 @@ func NewClient(
 func (c *Client) GetCarts(
 	ctx context.Context,
 ) (*ClientGetCartsResponse, error) {
+	const operation = "get carts client"
+
 	url := c.cfg.Integration.GetCarts.URL
 
 	httpReq, err := http.NewRequestWithContext(
@@ -38,9 +40,23 @@ func (c *Client) GetCarts(
 		return nil, err
 	}
 
+	headers, err := httpclient.GenerateTokenHeaders(
+		httpclient.TokenConfig{
+			Application: c.cfg.Integration.GetCarts.Application,
+			Requester:   c.cfg.Integration.GetCarts.Requester,
+			Key:         c.cfg.Integration.GetCarts.Key,
+			Base64Mode:  c.cfg.Integration.GetCarts.Base64Mode,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+
 	httpReq.Header.Set("Accept", "application/json")
-	httpReq.Header.Set("Application", c.cfg.Integration.GetPosts.Application)
-	httpReq.Header.Set("Requester", c.cfg.Integration.GetPosts.Requester)
+	httpReq.Header.Set("Application", headers.Application)
+	httpReq.Header.Set("Requester", headers.Requester)
+	httpReq.Header.Set("Pretoken", headers.Pretoken)
+	httpReq.Header.Set("Token", headers.Token)
 
 	var carts ClientGetCartsResponse
 
@@ -49,10 +65,7 @@ func (c *Client) GetCarts(
 		httpReq,
 		&carts,
 	); err != nil {
-		return nil, fmt.Errorf(
-			"get carts client: %w",
-			err,
-		)
+		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 
 	return &carts, nil

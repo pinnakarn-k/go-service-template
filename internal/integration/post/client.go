@@ -63,6 +63,8 @@ func (c *Client) GetPostByID(
 	ctx context.Context,
 	id int,
 ) (*ClientPostResponse, error) {
+	const operation = "get post by id client"
+
 	url := fmt.Sprintf(c.cfg.Integration.GetPostByID.URL, id)
 
 	httpReq, err := http.NewRequestWithContext(
@@ -75,9 +77,23 @@ func (c *Client) GetPostByID(
 		return nil, err
 	}
 
+	headers, err := httpclient.GenerateTokenHeaders(
+		httpclient.TokenConfig{
+			Application: c.cfg.Integration.GetPostByID.Application,
+			Requester:   c.cfg.Integration.GetPostByID.Requester,
+			Key:         c.cfg.Integration.GetPostByID.Key,
+			Base64Mode:  c.cfg.Integration.GetPostByID.Base64Mode,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+
 	httpReq.Header.Set("Accept", "application/json")
-	httpReq.Header.Set("Application", c.cfg.Integration.GetPostByID.Application)
-	httpReq.Header.Set("Requester", c.cfg.Integration.GetPostByID.Requester)
+	httpReq.Header.Set("Application", headers.Application)
+	httpReq.Header.Set("Requester", headers.Requester)
+	httpReq.Header.Set("Pretoken", headers.Pretoken)
+	httpReq.Header.Set("Token", headers.Token)
 
 	var post ClientPostResponse
 
@@ -86,10 +102,7 @@ func (c *Client) GetPostByID(
 		httpReq,
 		&post,
 	); err != nil {
-		return nil, fmt.Errorf(
-			"get post by id client: %w",
-			err,
-		)
+		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 
 	return &post, nil

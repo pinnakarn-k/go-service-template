@@ -26,6 +26,8 @@ func NewClient(
 func (c *Client) GetProducts(
 	ctx context.Context,
 ) (*ClientGetProductsResponse, error) {
+	const operation = "get products client"
+
 	url := c.cfg.Integration.GetProducts.URL
 
 	httpReq, err := http.NewRequestWithContext(
@@ -38,9 +40,23 @@ func (c *Client) GetProducts(
 		return nil, err
 	}
 
+	headers, err := httpclient.GenerateTokenHeaders(
+		httpclient.TokenConfig{
+			Application: c.cfg.Integration.GetProducts.Application,
+			Requester:   c.cfg.Integration.GetProducts.Requester,
+			Key:         c.cfg.Integration.GetProducts.Key,
+			Base64Mode:  c.cfg.Integration.GetProducts.Base64Mode,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+
 	httpReq.Header.Set("Accept", "application/json")
-	httpReq.Header.Set("Application", c.cfg.Integration.GetPosts.Application)
-	httpReq.Header.Set("Requester", c.cfg.Integration.GetPosts.Requester)
+	httpReq.Header.Set("Application", headers.Application)
+	httpReq.Header.Set("Requester", headers.Requester)
+	httpReq.Header.Set("Pretoken", headers.Pretoken)
+	httpReq.Header.Set("Token", headers.Token)
 
 	var products ClientGetProductsResponse
 
@@ -49,10 +65,7 @@ func (c *Client) GetProducts(
 		httpReq,
 		&products,
 	); err != nil {
-		return nil, fmt.Errorf(
-			"get products client: %w",
-			err,
-		)
+		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 
 	return &products, nil
