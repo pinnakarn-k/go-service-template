@@ -30,13 +30,7 @@ func Accepted[T any](c *fiber.Ctx, data T) error {
 
 func OKPage[T any](
 	c *fiber.Ctx,
-	data []T,
-	meta pagination.Meta,
+	response pagination.Response[T],
 ) error {
-	return c.Status(fiber.StatusOK).JSON(
-		pagination.Response[T]{
-			Data:       data,
-			Pagination: meta,
-		},
-	)
+	return c.Status(fiber.StatusOK).JSON(response)
 }
