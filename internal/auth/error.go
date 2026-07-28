@@ -30,9 +30,15 @@ var (
 		Message: "custCode not found",
 	}
 
-	ErrAccountIDNotFound = &apperror.Error{
+	ErrAccountNoNotFound = &apperror.Error{
 		Status:  http.StatusUnauthorized,
-		Code:    "ACCOUNT_ID_NOT_FOUND",
-		Message: "accountId not found",
+		Code:    "ACCOUNT_NO_NOT_FOUND",
+		Message: "accountNo not found",
+	}
+
+	ErrIdentityNotFound = &apperror.Error{
+		Status:  http.StatusUnauthorized,
+		Code:    "IDENTITY_NOT_FOUND",
+		Message: "identity not found",
 	}
 )

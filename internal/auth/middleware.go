@@ -50,13 +50,13 @@ func Middleware(cookieName string, jwtSecret string) fiber.Handler {
 			return ErrCustCodeNotFound
 		}
 
-		if claims.AccountID == "" {
-			return ErrAccountIDNotFound
+		if claims.AccountNo == "" {
+			return ErrAccountNoNotFound
 		}
 
 		setIdentity(c, Identity{
+			AccountNo: claims.AccountNo,
 			CustCode:  claims.CustCode,
-			AccountID: claims.AccountID,
 		})
 
 		return c.Next()

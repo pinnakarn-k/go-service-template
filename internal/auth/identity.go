@@ -1,18 +1,14 @@
 package auth
 
 import (
-	"errors"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 const identityKey = "identity"
 
-var ErrIdentityNotFound = errors.New("identity not found")
-
 type Identity struct {
+	AccountNo string
 	CustCode  string
-	AccountID string
 }
 
 func setIdentity(c *fiber.Ctx, identity Identity) {
