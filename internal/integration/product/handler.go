@@ -1,10 +1,9 @@
 package product
 
 import (
-	"go-service-template/internal/response"
-
 	"github.com/gofiber/fiber/v2"
 
+	"go-service-template/internal/httptransport"
 	appvalidator "go-service-template/internal/validator"
 )
 
@@ -31,5 +30,5 @@ func (h *Handler) GetProducts(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.OK(c, products)
+	return httptransport.OK(c, products)
 }

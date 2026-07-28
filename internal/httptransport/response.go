@@ -1,4 +1,4 @@
-package response
+package httptransport
 
 import "github.com/gofiber/fiber/v2"
 

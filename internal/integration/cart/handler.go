@@ -2,7 +2,7 @@ package cart
 
 import (
 	"go-service-template/internal/apperror"
-	"go-service-template/internal/response"
+	"go-service-template/internal/httptransport"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -43,5 +43,5 @@ func (h *Handler) GetCarts(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.OK(c, carts)
+	return httptransport.OK(c, carts)
 }

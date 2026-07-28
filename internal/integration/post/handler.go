@@ -1,7 +1,7 @@
 package post
 
 import (
-	"go-service-template/internal/response"
+	"go-service-template/internal/httptransport"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +23,7 @@ func (h *Handler) GetPosts(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.OK(c, posts)
+	return httptransport.OK(c, posts)
 }
 
 func (h *Handler) GetPostByID(c *fiber.Ctx) error {
@@ -40,5 +40,5 @@ func (h *Handler) GetPostByID(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.OK(c, post)
+	return httptransport.OK(c, post)
 }
