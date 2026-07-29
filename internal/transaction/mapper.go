@@ -7,52 +7,52 @@ import (
 )
 
 func mapTransactionRecordsToResponses(
-	src []TransactionRecord,
+	transactionRecords []TransactionRecord,
 ) []TransactionResponse {
-	items := make([]TransactionResponse, 0, len(src))
+	transactionResponses := make([]TransactionResponse, 0, len(transactionRecords))
 
-	for _, transaction := range src {
-		items = append(items, TransactionResponse{
-			ID:             transaction.ID,
-			AccountNo:      transaction.AccountNo,
-			Symbol:         transaction.Symbol,
-			Side:           mapSide(transaction.Side),
-			Quantity:       formatQuantity(transaction.Quantity),
-			Price:          formatAmount(transaction.Price),
-			Amount:         formatAmount(transaction.Amount),
-			Fee:            formatAmount(transaction.Fee),
-			Status:         mapStatus(transaction.Status),
-			TradeDate:      formatDate(transaction.TradeDate),
-			SettlementDate: formatDate(transaction.SettlementDate),
-			CreatedAt:      formatDateTime(transaction.CreatedAt),
-			UpdatedAt:      formatDateTime(transaction.UpdatedAt),
+	for _, transactionRecord := range transactionRecords {
+		transactionResponses = append(transactionResponses, TransactionResponse{
+			ID:             transactionRecord.ID,
+			AccountNo:      transactionRecord.AccountNo,
+			Symbol:         transactionRecord.Symbol,
+			Side:           mapSide(transactionRecord.Side),
+			Quantity:       formatQuantity(transactionRecord.Quantity),
+			Price:          formatAmount(transactionRecord.Price),
+			Amount:         formatAmount(transactionRecord.Amount),
+			Fee:            formatAmount(transactionRecord.Fee),
+			Status:         mapStatus(transactionRecord.Status),
+			TradeDate:      formatDate(transactionRecord.TradeDate),
+			SettlementDate: formatDate(transactionRecord.SettlementDate),
+			CreatedAt:      formatDateTime(transactionRecord.CreatedAt),
+			UpdatedAt:      formatDateTime(transactionRecord.UpdatedAt),
 		})
 	}
 
-	return items
+	return transactionResponses
 }
 
 func mapTransactionRecordToResponse(
-	src *TransactionRecord,
+	transactionRecord *TransactionRecord,
 ) *TransactionResponse {
-	if src == nil {
+	if transactionRecord == nil {
 		return nil
 	}
 
 	return &TransactionResponse{
-		ID:             src.ID,
-		AccountNo:      src.AccountNo,
-		Symbol:         src.Symbol,
-		Side:           mapSide(src.Side),
-		Quantity:       formatQuantity(src.Quantity),
-		Price:          formatAmount(src.Price),
-		Amount:         formatAmount(src.Amount),
-		Fee:            formatAmount(src.Fee),
-		Status:         mapStatus(src.Status),
-		TradeDate:      formatDate(src.TradeDate),
-		SettlementDate: formatDate(src.SettlementDate),
-		CreatedAt:      formatDateTime(src.CreatedAt),
-		UpdatedAt:      formatDateTime(src.UpdatedAt),
+		ID:             transactionRecord.ID,
+		AccountNo:      transactionRecord.AccountNo,
+		Symbol:         transactionRecord.Symbol,
+		Side:           mapSide(transactionRecord.Side),
+		Quantity:       formatQuantity(transactionRecord.Quantity),
+		Price:          formatAmount(transactionRecord.Price),
+		Amount:         formatAmount(transactionRecord.Amount),
+		Fee:            formatAmount(transactionRecord.Fee),
+		Status:         mapStatus(transactionRecord.Status),
+		TradeDate:      formatDate(transactionRecord.TradeDate),
+		SettlementDate: formatDate(transactionRecord.SettlementDate),
+		CreatedAt:      formatDateTime(transactionRecord.CreatedAt),
+		UpdatedAt:      formatDateTime(transactionRecord.UpdatedAt),
 	}
 }
 
