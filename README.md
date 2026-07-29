@@ -56,6 +56,6 @@ If all commands pass, the project is ready to commit.
 
 ```bash
 identity, err := CurrentIdentity(c)
+identity.AccountNo
 identity.CustCode
-identity.AccountID
 ```
