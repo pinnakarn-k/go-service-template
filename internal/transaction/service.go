@@ -9,11 +9,23 @@ import (
 	"go-service-template/internal/pagination"
 )
 
-type Service struct {
-	repository *Repository
+type transactionRepository interface {
+	SearchTransactions(
+		ctx context.Context,
+		request SearchTransactionsRequest,
+	) ([]TransactionRecord, int, error)
+
+	GetTransactionByID(
+		ctx context.Context,
+		id int64,
+	) (*TransactionRecord, error)
 }
 
-func NewService(repository *Repository) *Service {
+type Service struct {
+	repository transactionRepository
+}
+
+func NewService(repository transactionRepository) *Service {
 	return &Service{
 		repository: repository,
 	}
@@ -34,10 +46,10 @@ func (s *Service) SearchTransactions(
 		)
 	}
 
-	items := mapTransactionRecordsToResponses(transactionRecords)
+	tansactionResponses := mapTransactionRecordsToResponses(transactionRecords)
 
 	return &pagination.Response[TransactionResponse]{
-		Data: items,
+		Data: tansactionResponses,
 		Pagination: pagination.NewMeta(
 			request.Page,
 			request.PageSize,
