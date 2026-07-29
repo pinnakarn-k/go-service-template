@@ -15,6 +15,7 @@ type Config struct {
 	CORS        CORSConfig        `mapstructure:"cors"`
 	HTTPClient  HTTPClientConfig  `mapstructure:"http_client"`
 	Auth        AuthConfig        `mapstructure:"auth"`
+	Database    DatabaseConfig    `mapstructure:"database"`
 	Integration IntegrationConfig `mapstructure:"integration"`
 }
 
@@ -40,6 +41,22 @@ type HTTPClientConfig struct {
 type AuthConfig struct {
 	CookieName string `mapstructure:"cookie_name"`
 	JWTSecret  string `mapstructure:"jwt_secret"`
+}
+
+type DatabaseConfig struct {
+	Postgres PostgresConfig `mapstructure:"postgres"`
+}
+
+type PostgresConfig struct {
+	Host            string        `mapstructure:"host"`
+	Port            int           `mapstructure:"port"`
+	User            string        `mapstructure:"user"`
+	Password        string        `mapstructure:"password"`
+	Name            string        `mapstructure:"name"`
+	SSLMode         string        `mapstructure:"ssl_mode"`
+	MaxOpenConns    int           `mapstructure:"max_open_conns"`
+	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
+	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"`
 }
 
 type IntegrationConfig struct {

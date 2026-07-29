@@ -17,6 +17,18 @@ auth:
   cookie_name: x-my-service-token
   jwt_secret: local-dev-secret-123456
 
+database:
+  postgres:
+    host: localhost
+    port: 5432
+    user: user
+    password: password
+    name: go_service_template
+    ssl_mode: disable
+    max_open_conns: 25
+    max_idle_conns: 25
+    conn_max_lifetime: 5m
+
 integration:
   get_products:
     url: https://dummyjson.com/products

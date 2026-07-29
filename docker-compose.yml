@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: go-service-template-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: go_service_template
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
+
+volumes:
+  postgres_data:

@@ -16,17 +16,29 @@ import (
 	"go-service-template/internal/integration/product"
 	"go-service-template/internal/logger"
 	"go-service-template/internal/middleware"
+	"go-service-template/internal/postgres"
+	"go-service-template/internal/transaction"
 	"go-service-template/internal/validator"
 )
 
 func main() {
+	// config
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// logger
 	logger := logger.New()
 
+	// db
+	postgresDatabase, err := postgres.New(cfg.Database.Postgres)
+	if err != nil {
+		log.Fatalf("connect postgres: %v", err)
+	}
+	defer postgresDatabase.Close()
+
+	// fiber
 	app := fiber.New(fiber.Config{
 		AppName:      cfg.App.Name,
 		BodyLimit:    cfg.Server.BodyLimitMB * 1024 * 1024,
@@ -39,6 +51,7 @@ func main() {
 		AllowHeaders: cfg.CORS.AllowHeaders,
 	}))
 
+	// middleware
 	app.Use(middleware.RequestID())
 	app.Use(middleware.RequestLogger(logger))
 
@@ -47,6 +60,7 @@ func main() {
 		cfg.Auth.JWTSecret,
 	)
 
+	// routes
 	api := app.Group("/api", authMiddleware)
 
 	requestValidator := validator.New()
@@ -88,6 +102,17 @@ func main() {
 	api.Get("/posts", postHandler.GetPosts)
 	api.Get("/posts/:id", postHandler.GetPostByID)
 
+	// transaction
+	transactionRepository := transaction.NewRepository(postgresDatabase)
+	transactionService := transaction.NewService(transactionRepository)
+	transactionHandler := transaction.NewHandler(
+		transactionService,
+		requestValidator,
+	)
+	api.Post("/transactions/search", transactionHandler.SearchTransactions)
+	api.Get("/transactions/:id", transactionHandler.GetTransactionByID)
+
+	// server
 	address := fmt.Sprintf(":%d", cfg.Server.Port)
 
 	logger.Info(

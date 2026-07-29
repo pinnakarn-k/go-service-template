@@ -78,6 +78,9 @@ func validationMessage(
 	case "uuid":
 		return "must be a valid UUID"
 
+	case "datetime":
+		return "must be a valid date in YYYY-MM-DD format"
+
 	default:
 		return fmt.Sprintf(
 			"failed validation rule %s",
