@@ -35,6 +35,10 @@ func (s *Service) SearchTransactions(
 	ctx context.Context,
 	request SearchTransactionsRequest,
 ) (*pagination.Response[TransactionResponse], error) {
+	if err := validateSearchTransactionsRequest(request); err != nil {
+		return nil, err
+	}
+
 	transactionRecords, totalItems, err := s.repository.SearchTransactions(
 		ctx,
 		request,
